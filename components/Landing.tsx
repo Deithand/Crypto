@@ -1,246 +1,316 @@
-import React, { useRef } from 'react';
-import { ArrowRight, Bot, TrendingUp, Shield, Brain } from 'lucide-react';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import React, { useRef, useState } from 'react';
+import { ArrowRight, Bot, TrendingUp, Shield, Brain, Zap, BarChart3, Lock, PlayCircle, ChevronRight, X, FileText, ShieldCheck } from 'lucide-react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 
 interface LandingProps {
   onStart: () => void;
 }
 
+type ModalType = 'none' | 'disclaimer' | 'privacy';
+
 const Landing: React.FC<LandingProps> = ({ onStart }) => {
   const containerRef = useRef(null);
+  const [activeModal, setActiveModal] = useState<ModalType>('none');
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"]
   });
 
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.1], [1, 0.95]);
+  // Apple-style parallax for hero text
+  const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.9]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
 
   return (
-    <div ref={containerRef} className="relative w-full bg-[#050505] text-white selection:bg-white selection:text-black overflow-hidden">
+    <div ref={containerRef} className="relative w-full bg-[#000000] text-[#f5f5f7] font-sans selection:bg-blue-500/30">
       
-      {/* Noise Overlay */}
-      <div className="fixed inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] pointer-events-none z-50"></div>
+      {/* NAV BAR (Sticky Apple Style) */}
+      <motion.nav 
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className="fixed top-0 left-0 right-0 z-50 h-12 bg-black/70 backdrop-blur-xl border-b border-white/5 flex items-center justify-center lg:justify-between px-6 lg:px-12 max-w-[1400px] mx-auto left-0 right-0"
+      >
+         <div className="text-xs font-medium tracking-wide text-gray-300 cursor-pointer hover:text-white transition-colors">CryptoPro Guide</div>
+         <div className="hidden lg:flex items-center gap-6 text-[11px] font-medium text-gray-400">
+            <span className="hover:text-white transition-colors cursor-pointer">Обзор</span>
+            <span className="hover:text-white transition-colors cursor-pointer">Возможности</span>
+            <span className="hover:text-white transition-colors cursor-pointer">Детали</span>
+            <button onClick={onStart} className="bg-white text-black px-3 py-1 rounded-full hover:bg-gray-200 transition-colors font-semibold">
+               Начать обучение
+            </button>
+         </div>
+      </motion.nav>
 
       {/* HERO SECTION */}
-      <section className="relative h-screen flex flex-col items-center justify-center px-6 border-b border-white/5">
-        <motion.div 
-          style={{ opacity: heroOpacity, scale: heroScale }}
-          className="text-center max-w-5xl mx-auto z-10"
-        >
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="flex justify-center mb-8"
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-              </span>
-              <span className="text-[10px] font-medium tracking-widest uppercase text-zinc-400">Guide v2.0 Online</span>
-            </div>
-          </motion.div>
+      <section className="relative h-screen flex flex-col items-center justify-center px-6 overflow-hidden pt-12">
+        <motion.div style={{ scale: heroScale, opacity: heroOpacity }} className="text-center max-w-4xl mx-auto z-10">
+           <motion.h2 
+             initial={{ opacity: 0, y: 30 }}
+             animate={{ opacity: 1, y: 0 }}
+             transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+             className="text-[#2997ff] font-semibold text-lg md:text-xl mb-4 tracking-wide"
+           >
+             Фьючерсы. Переосмысление.
+           </motion.h2>
+           
+           <motion.h1 
+             initial={{ opacity: 0, y: 40 }}
+             animate={{ opacity: 1, y: 0 }}
+             transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+             className="text-5xl md:text-7xl lg:text-8xl font-semibold tracking-tighter leading-[1.05] mb-6"
+           >
+             Покори рынок. <br/>
+             <span className="text-gray-500">Без хаоса.</span>
+           </motion.h1>
 
-          <motion.h1 
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="text-6xl md:text-9xl font-bold tracking-tighter leading-[0.9] mb-8"
-          >
-            <span className="block text-zinc-600">DIGITAL</span>
-            <span className="block text-white">TRADING</span>
-          </motion.h1>
+           <motion.p 
+             initial={{ opacity: 0, y: 20 }}
+             animate={{ opacity: 1, y: 0 }}
+             transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+             className="text-xl text-gray-400 font-medium max-w-xl mx-auto mb-10 leading-relaxed"
+           >
+             Профессиональные знания. Доступно для каждого.
+           </motion.p>
 
-          <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.6 }}
-            className="text-lg md:text-xl text-zinc-500 max-w-xl mx-auto leading-relaxed mb-12 font-light"
-          >
-            Интерактивное руководство по фьючерсам. 
-            <br />
-            Без инфоцыганства. Только математика и психология.
-          </motion.p>
-
-          <motion.button
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ duration: 0.3 }}
-            onClick={onStart}
-            className="group relative inline-flex items-center gap-4 px-10 py-5 bg-white text-black rounded-full font-bold text-lg tracking-tight overflow-hidden"
-          >
-             <span className="relative z-10">Начать Обучение</span>
-             <ArrowRight className="relative z-10 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
-             <div className="absolute inset-0 bg-zinc-200 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out"></div>
-          </motion.button>
+           <motion.div
+             initial={{ opacity: 0, scale: 0.9 }}
+             animate={{ opacity: 1, scale: 1 }}
+             transition={{ duration: 0.8, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+             className="flex flex-col sm:flex-row items-center justify-center gap-4"
+           >
+              <button 
+                onClick={onStart}
+                className="bg-[#2997ff] hover:bg-[#147ce5] text-white px-8 py-3 rounded-full text-base font-medium transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(41,151,255,0.3)] hover:shadow-[0_0_30px_rgba(41,151,255,0.5)]"
+              >
+                Читать Гайд <ArrowRight size={16} />
+              </button>
+              <button 
+                onClick={onStart} 
+                className="text-[#2997ff] hover:text-white transition-colors flex items-center gap-1 text-base px-4 py-2"
+              >
+                Содержание курса <ChevronRight size={14} />
+              </button>
+           </motion.div>
         </motion.div>
-
-        {/* Ambient Background Gradient */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-br from-zinc-800/20 to-transparent rounded-full blur-[120px] pointer-events-none"></div>
       </section>
 
-      {/* SCROLL REVEAL TEXT SECTION */}
-      <section className="min-h-screen flex items-center justify-center px-6 py-32 bg-[#050505] border-b border-white/5">
-        <div className="max-w-4xl mx-auto text-4xl md:text-6xl font-bold leading-tight tracking-tight text-center">
-          <ScrollRevealText text="Большинство теряет деньги в первую неделю. Почему? Потому что они играют в казино, а не работают с вероятностями. Мы научим тебя быть казино." />
-        </div>
-      </section>
-
-      {/* FEATURE CARDS (STICKY SCROLL) */}
-      <section className="py-32 px-6 bg-[#080808]">
-        <div className="max-w-7xl mx-auto">
-          <motion.div 
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="mb-24"
-          >
-            <h2 className="text-xs font-mono text-zinc-500 uppercase tracking-widest mb-4">01 / Foundation</h2>
-            <h3 className="text-5xl md:text-7xl font-bold text-white tracking-tight">Система Знаний</h3>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-             <FeatureCard 
-                icon={TrendingUp}
-                title="Технический Анализ" 
-                desc="Понимание структуры рынка. Уровни, тренды и ликвидность. Без гадания на кофейной гуще."
-                delay={0}
-             />
-             <FeatureCard 
-                icon={Shield}
-                title="Риск-менеджмент" 
-                desc="Математика выживания. Как сделать так, чтобы одна ошибка не обнулила твой депозит."
-                delay={0.2}
-             />
-             <FeatureCard 
-                icon={Brain}
-                title="Психология Толпы" 
-                desc="Контроль эмоций. Почему страх (FOMO) и жадность заставляют тебя покупать на хаях."
-                delay={0.4}
-             />
-          </div>
-        </div>
-      </section>
-
-      {/* AI SHOWCASE PARALLAX */}
-      <section className="relative py-40 px-6 overflow-hidden border-y border-white/5 bg-[#050505]">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center mb-8">
-              <Bot size={32} className="text-white" />
-            </div>
-            <h2 className="text-5xl md:text-7xl font-bold mb-8 tracking-tighter">
-              AI Наставник
-            </h2>
-            <p className="text-xl text-zinc-400 leading-relaxed mb-12 font-light">
-              Не просто текст. Встроенный искусственный интеллект, обученный на базе данных опытных трейдеров.
-              Задавай вопросы, проверяй гипотезы, считай риски в реальном времени.
-            </p>
-            
-            <div className="space-y-6">
-               <div className="flex items-center gap-4">
-                  <div className="w-12 h-[1px] bg-white/20"></div>
-                  <span className="text-zinc-300 font-mono text-sm">24/7 ДОСТУПНОСТЬ</span>
-               </div>
-               <div className="flex items-center gap-4">
-                  <div className="w-12 h-[1px] bg-white/20"></div>
-                  <span className="text-zinc-300 font-mono text-sm">АНАЛИЗ КОНТЕКСТА</span>
-               </div>
-            </div>
-          </motion.div>
-
-          <div className="relative perspective-1000">
-             <motion.div 
-               initial={{ opacity: 0, rotateX: 20, y: 100 }}
-               whileInView={{ opacity: 1, rotateX: 0, y: 0 }}
-               transition={{ duration: 1, type: "spring" }}
-               viewport={{ once: true }}
-               className="relative z-10 bg-gradient-to-b from-zinc-900 to-black border border-white/10 rounded-3xl p-8 shadow-2xl"
-             >
-                {/* Mock Chat UI */}
-                <div className="flex items-center justify-between border-b border-white/5 pb-6 mb-6">
-                   <div className="flex items-center gap-3">
-                      <div className="w-3 h-3 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.5)]"></div>
-                      <span className="text-sm font-medium text-zinc-300">Assistant Online</span>
-                   </div>
-                </div>
-                <div className="space-y-6 font-mono text-sm">
-                   <div className="flex gap-4">
-                      <div className="flex-1 text-right">
-                         <span className="inline-block bg-white text-black px-4 py-3 rounded-2xl rounded-tr-sm">
-                            Что такое Isolated Margin?
-                         </span>
-                      </div>
-                   </div>
-                   <div className="flex gap-4">
-                      <div className="flex-1">
-                         <span className="inline-block bg-zinc-800 text-zinc-300 px-4 py-3 rounded-2xl rounded-tl-sm leading-relaxed">
-                            Изолированная маржа ограничивает твой риск только суммой, выделенной на конкретную сделку. Если цена пойдет против тебя, ты потеряешь только эту сумму, а не весь депозит.
-                         </span>
-                      </div>
-                   </div>
-                </div>
-             </motion.div>
-             
-             {/* Glow Effect behind chat */}
-             <div className="absolute inset-0 bg-emerald-500/20 blur-[100px] -z-10 transform translate-y-10"></div>
-          </div>
-        </div>
-      </section>
-
-      {/* CREATORS & FOOTER */}
-      <footer className="py-24 px-6 text-center bg-[#030303]">
-         <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="max-w-4xl mx-auto"
-         >
-            <h3 className="text-xs font-mono text-zinc-600 uppercase tracking-widest mb-12">Команда</h3>
-            <div className="flex flex-col md:flex-row items-center justify-center gap-16 mb-24">
-               <div className="text-center group cursor-default">
-                  <div className="text-2xl font-bold text-white mb-2 group-hover:text-emerald-500 transition-colors">Deithand</div>
-                  <div className="text-sm text-zinc-500">Strategy & Content</div>
-               </div>
-               <div className="text-center group cursor-default">
-                  <div className="text-2xl font-bold text-white mb-2 group-hover:text-purple-500 transition-colors">Backer</div>
-                  <div className="text-sm text-zinc-500">Design & Engineering</div>
-               </div>
+      {/* BENTO GRID SECTION */}
+      <section className="bg-[#000] py-32 px-4 sm:px-6">
+         <div className="max-w-[1200px] mx-auto">
+            <div className="mb-20">
+               <h2 className="text-4xl md:text-6xl font-semibold tracking-tight mb-4">Мощная база знаний.</h2>
+               <p className="text-2xl text-gray-500 font-medium">Всё, что нужно для старта с нуля до профи.</p>
             </div>
 
-            <div className="border-t border-white/5 pt-12">
-               <button 
-                  onClick={onStart}
-                  className="text-zinc-400 hover:text-white transition-colors text-sm mb-8"
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+               
+               {/* Large Card 1 */}
+               <BentoCard 
+                  className="md:col-span-2 bg-[#161617] min-h-[400px] flex flex-col justify-between overflow-hidden group"
                >
-                  cloyu.buzz/crypto
-               </button>
-               <p className="text-[10px] text-zinc-700 uppercase tracking-widest">
-                  © 2024 All Rights Reserved
-               </p>
+                  <div className="p-10 z-10 relative">
+                     <h3 className="text-gray-400 font-semibold text-xs uppercase tracking-widest mb-2">Технический Анализ</h3>
+                     <h4 className="text-3xl font-semibold text-white mb-4">Видеть невидимое.</h4>
+                     <p className="text-gray-400 max-w-md text-lg leading-relaxed">Учись читать структуру рынка, ликвидность и price action без мусора на графике.</p>
+                  </div>
+                  <div className="absolute right-[-20%] bottom-[-20%] w-[70%] h-[70%] bg-gradient-to-tl from-[#2997ff]/20 to-transparent rounded-full blur-[80px] group-hover:opacity-80 transition-opacity duration-700"></div>
+                  <div className="h-64 w-full mt-auto relative">
+                      {/* Abstract Chart UI Mockup */}
+                      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[90%] h-[90%] bg-[#1d1d1f] rounded-t-2xl border border-white/10 shadow-2xl overflow-hidden flex items-center justify-center">
+                         <TrendingUp size={64} className="text-[#2997ff] opacity-50" />
+                      </div>
+                  </div>
+               </BentoCard>
+
+               {/* Tall Card */}
+               <BentoCard className="bg-[#161617] min-h-[400px] md:row-span-2 flex flex-col overflow-hidden group">
+                  <div className="p-10 flex-1 z-10">
+                     <Bot size={48} className="text-[#2997ff] mb-6" />
+                     <h3 className="text-3xl font-semibold text-white mb-4">AI Ментор. <br/> Всегда рядом.</h3>
+                     <p className="text-gray-400 text-lg leading-relaxed">Твой личный аналитик. Спрашивай про стратегии, риски или термины в любое время.</p>
+                  </div>
+                  <div className="h-[300px] w-full bg-gradient-to-b from-transparent to-black/50 relative flex flex-col gap-3 p-6 opacity-50 group-hover:opacity-80 transition-opacity duration-500">
+                      <div className="w-full bg-[#2c2c2e] rounded-xl p-3 ml-4 border border-white/5 self-end text-xs text-gray-300">Как посчитать RR?</div>
+                      <div className="w-[90%] bg-[#0071e3] rounded-xl p-3 border border-white/5 self-start text-xs text-white">Формула: (Цель - Вход) / (Вход - Стоп). Целься в &gt; 2.0</div>
+                  </div>
+               </BentoCard>
+
+               {/* Small Card 1 */}
+               <BentoCard className="bg-[#161617] min-h-[350px] flex flex-col p-10 justify-center group overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                  <Lock size={40} className="text-purple-400 mb-4 relative z-10" />
+                  <h4 className="text-2xl font-semibold text-white mb-2 relative z-10">Риск — Главное.</h4>
+                  <p className="text-gray-400 relative z-10 leading-relaxed">Математические модели для защиты капитала от ликвидации.</p>
+               </BentoCard>
+
+               {/* Small Card 2 */}
+               <BentoCard className="bg-[#161617] min-h-[350px] flex flex-col p-10 justify-center group overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                  <Brain size={40} className="text-emerald-400 mb-4 relative z-10" />
+                  <h4 className="text-2xl font-semibold text-white mb-2 relative z-10">Психология.</h4>
+                  <p className="text-gray-400 relative z-10 leading-relaxed">Управляй разумом. Победи FOMO и тильт, пока они не победили тебя.</p>
+               </BentoCard>
+
             </div>
-         </motion.div>
+         </div>
+      </section>
+
+      {/* LARGE TEXT SECTION */}
+      <section className="bg-[#161617] py-40 px-6">
+         <div className="max-w-4xl mx-auto text-center">
+            <ScrollRevealText text="Трейдинг — это не удача. Это точность, дисциплина и правильная информация в правильное время." />
+         </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="bg-[#000] py-20 px-6 border-t border-white/10">
+         <div className="max-w-[1000px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-10">
+            <div>
+               <div className="text-sm font-semibold text-white mb-1">CryptoPro Guide</div>
+               <div className="text-xs text-gray-500">Сделано в России.</div>
+            </div>
+            
+            <div className="flex gap-8 flex-wrap">
+               <div className="flex flex-col gap-2">
+                  <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Создатели</span>
+                  <span className="text-sm text-white hover:text-[#2997ff] cursor-pointer transition-colors">Deithand</span>
+                  <span className="text-sm text-white hover:text-[#2997ff] cursor-pointer transition-colors">Backer</span>
+               </div>
+               <div className="flex flex-col gap-2">
+                  <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Информация</span>
+                  <button 
+                    onClick={() => setActiveModal('disclaimer')}
+                    className="text-sm text-gray-500 hover:text-white text-left transition-colors"
+                  >
+                    Отказ от ответственности
+                  </button>
+                  <button 
+                    onClick={() => setActiveModal('privacy')}
+                    className="text-sm text-gray-500 hover:text-white text-left transition-colors"
+                  >
+                    Конфиденциальность
+                  </button>
+               </div>
+            </div>
+         </div>
+         <div className="max-w-[1000px] mx-auto mt-12 text-[10px] text-gray-600">
+            © 2024. Все права защищены. Этот гайд не является финансовой рекомендацией.
+         </div>
       </footer>
+
+      {/* LEGAL MODAL */}
+      <LegalModal 
+        isOpen={activeModal !== 'none'} 
+        type={activeModal} 
+        onClose={() => setActiveModal('none')} 
+      />
+
     </div>
   );
 };
 
-// COMPONENT: SCROLL REVEAL TEXT
+// --- SUBCOMPONENTS ---
+
+const LegalModal = ({ isOpen, type, onClose }: { isOpen: boolean, type: ModalType, onClose: () => void }) => {
+  const content = {
+    disclaimer: {
+      title: 'Отказ от ответственности',
+      icon: Shield,
+      text: (
+        <div className="space-y-4">
+          <p>Торговля криптовалютными фьючерсами сопряжена с <strong>экстремально высоким уровнем риска</strong>. Вы можете потерять весь свой инвестиционный капитал.</p>
+          <p>Информация, представленная в данном руководстве и предоставляемая AI-ассистентом, носит исключительно <strong>образовательный и информационный характер</strong>. Она не является индивидуальной инвестиционной рекомендацией, финансовым советом, торговым сигналом или призывом к действию.</p>
+          <p>Авторы (Deithand, Backer) и администрация сайта не несут ответственности за любые прямые или косвенные убытки, возникшие в результате использования данной информации. Все торговые решения вы принимаете самостоятельно на свой страх и риск.</p>
+          <p className="text-orange-400">Никогда не торгуйте на заемные средства или деньги, потеря которых критична для вашего благосостояния.</p>
+        </div>
+      )
+    },
+    privacy: {
+      title: 'Конфиденциальность',
+      icon: FileText,
+      text: (
+        <div className="space-y-4">
+          <p>Мы уважаем вашу приватность. Этот веб-сайт работает преимущественно на стороне клиента (в вашем браузере).</p>
+          <ul className="list-disc pl-5 space-y-2">
+            <li><strong>Сбор данных:</strong> Мы не собираем, не храним и не продаем ваши личные данные (имя, email, телефон).</li>
+            <li><strong>AI Ассистент:</strong> Диалоги с AI-помощником обрабатываются через Google Gemini API. Мы не сохраняем историю ваших чатов на наших серверах.</li>
+            <li><strong>Local Storage:</strong> Мы можем использовать локальное хранилище вашего браузера для сохранения вашего прогресса или настроек темы. Эти данные не покидают ваше устройство.</li>
+            <li><strong>Аналитика:</strong> Сайт может использовать анонимную статистику посещений для улучшения качества контента.</li>
+          </ul>
+        </div>
+      )
+    },
+    none: { title: '', icon: Shield, text: null }
+  };
+
+  const current = content[type] || content.none;
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60]"
+          />
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 flex items-center justify-center z-[70] p-4 pointer-events-none"
+          >
+            <div className="bg-[#1c1c1e] border border-white/10 w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden pointer-events-auto max-h-[80vh] flex flex-col">
+              <div className="flex items-center justify-between p-6 border-b border-white/5 bg-[#2c2c2e]/50 backdrop-blur-md">
+                <div className="flex items-center gap-3">
+                  <current.icon size={20} className="text-[#2997ff]" />
+                  <h3 className="text-lg font-semibold text-white">{current.title}</h3>
+                </div>
+                <button onClick={onClose} className="text-gray-400 hover:text-white bg-white/5 p-2 rounded-full transition-colors">
+                  <X size={18} />
+                </button>
+              </div>
+              <div className="p-8 overflow-y-auto text-gray-300 text-[15px] leading-relaxed">
+                {current.text}
+              </div>
+              <div className="p-6 border-t border-white/5 bg-[#161617] flex justify-end">
+                <button 
+                  onClick={onClose}
+                  className="bg-[#2997ff] hover:bg-[#147ce5] text-white px-6 py-2.5 rounded-full text-sm font-medium transition-colors"
+                >
+                  Понятно
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+};
+
+const BentoCard = ({ children, className }: { children: React.ReactNode, className?: string }) => {
+   return (
+      <motion.div 
+         initial={{ opacity: 0, scale: 0.95 }}
+         whileInView={{ opacity: 1, scale: 1 }}
+         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+         viewport={{ once: true, margin: "-50px" }}
+         className={`rounded-[30px] relative ${className}`}
+      >
+         {children}
+      </motion.div>
+   )
+}
+
 const ScrollRevealText = ({ text }: { text: string }) => {
   const words = text.split(" ");
   return (
-    <p className="flex flex-wrap justify-center gap-x-3 gap-y-2">
+    <p className="flex flex-wrap justify-center gap-x-4 gap-y-2">
       {words.map((word, i) => (
         <Word key={i} i={i}>{word}</Word>
       ))}
@@ -252,41 +322,20 @@ const Word = ({ children, i }: { children: string, i: number }) => {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start 0.9", "start 0.6"] // Starts animating when word enters bottom of screen
+    offset: ["start 0.9", "start 0.6"] 
   });
   
-  const opacity = useTransform(scrollYProgress, [0, 1], [0.1, 1]);
+  const opacity = useTransform(scrollYProgress, [0, 1], [0.1, 1]); 
   
   return (
     <motion.span 
       ref={ref}
       style={{ opacity }}
-      className="transition-colors duration-300"
+      className="text-3xl md:text-5xl font-semibold tracking-tight transition-colors duration-300"
     >
       {children}
     </motion.span>
   );
 };
-
-// COMPONENT: FEATURE CARD
-const FeatureCard = ({ icon: Icon, title, desc, delay }: any) => {
-   return (
-      <motion.div
-         initial={{ opacity: 0, y: 20 }}
-         whileInView={{ opacity: 1, y: 0 }}
-         transition={{ duration: 0.5, delay }}
-         viewport={{ once: true }}
-         className="group p-8 rounded-3xl bg-zinc-900/30 border border-white/5 hover:bg-zinc-900/50 hover:border-white/10 transition-all duration-500 cursor-default"
-      >
-         <div className="mb-6">
-            <Icon size={32} className="text-zinc-500 group-hover:text-white transition-colors duration-300" />
-         </div>
-         <h4 className="text-xl font-bold text-white mb-4">{title}</h4>
-         <p className="text-zinc-400 leading-relaxed text-sm">
-            {desc}
-         </p>
-      </motion.div>
-   )
-}
 
 export default Landing;
